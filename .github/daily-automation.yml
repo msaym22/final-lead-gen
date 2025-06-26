@@ -1,0 +1,112 @@
+name: Daily AI Lead Generation Automation
+
+on:
+  schedule:
+    # Run daily at 9:00 AM UTC (adjust timezone as needed)
+    - cron: '0 9 * * *'
+  workflow_dispatch: # Allow manual triggering
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  daily-automation:
+    name: Daily Lead Research & Generation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Daily Lead Discovery
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          NEXT_PUBLIC_YOUR_NAME: ${{ vars.NEXT_PUBLIC_YOUR_NAME }}
+          NEXT_PUBLIC_YOUR_WEBSITE: ${{ vars.NEXT_PUBLIC_YOUR_WEBSITE }}
+          NEXT_PUBLIC_YOUR_CALENDLY: ${{ vars.NEXT_PUBLIC_YOUR_CALENDLY }}
+        run: |
+          echo "🚀 Starting daily lead generation automation..."
+          node scripts/daily-automation.js
+
+      - name: Generate Performance Report
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        run: |
+          echo "📊 Generating daily performance report..."
+          node scripts/generate-report.js
+
+      - name: Send Notification
+        if: always()
+        env:
+          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            curl -H "Content-Type: application/json" \
+                 -d '{"content": "✅ Daily AI lead generation completed successfully! Check your dashboard for new leads."}' \
+                 $WEBHOOK_URL
+          else
+            curl -H "Content-Type: application/json" \
+                 -d '{"content": "❌ Daily automation failed. Please check the logs."}' \
+                 $WEBHOOK_URL
+          fi
+
+  backup-database:
+    name: Daily Database Backup
+    runs-on: ubuntu-latest
+    needs: daily-automation
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Backup Database
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        run: |
+          echo "💾 Creating daily database backup..."
+          node scripts/backup-database.js
+
+  cleanup:
+    name: Cleanup Old Data
+    runs-on: ubuntu-latest
+    needs: backup-database
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Cleanup Old Data
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        run: |
+          echo "🧹 Cleaning up old data and optimizing database..."
+          node scripts/cleanup-data.js

@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 shadow-lg hover:shadow-glow;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary-600 hover:bg-secondary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 shadow-lg;
+  }
+  
+  .btn-accent {
+    @apply bg-accent-600 hover:bg-accent-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 shadow-lg;
+  }
+  
+  .btn-outline {
+    @apply border border-border hover:bg-background-secondary text-foreground px-4 py-2 rounded-lg font-medium transition-colors duration-200;
+  }
+  
+  .card {
+    @apply bg-background-secondary border border-border rounded-xl p-6 shadow-lg;
+  }
+  
+  .card-hover {
+    @apply card hover:shadow-glow transition-shadow duration-300;
+  }
+  
+  .input-field {
+    @apply bg-input border border-border rounded-lg px-3 py-2 text-foreground placeholder-foreground-muted focus:outline-none focus:ring-2 focus:ring-ring transition-colors duration-200;
+  }
+  
+  .sidebar-item {
+    @apply flex items-center gap-3 px-4 py-3 rounded-lg text-foreground-secondary hover:text-foreground hover:bg-background-tertiary transition-colors duration-200;
+  }
+  
+  .sidebar-item-active {
+    @apply sidebar-item bg-primary-600/10 text-primary-400 border-l-4 border-primary-600;
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent;
+  }
+  
+  .stat-card {
+    @apply card bg-gradient-to-br from-background-secondary to-background-tertiary;
+  }
+  
+  .metric-card {
+    @apply card hover:scale-105 transition-transform duration-200 cursor-pointer;
+  }
+  
+  .loading-spinner {
+    @apply animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600;
+  }
+  
+  .progress-bar {
+    @apply w-full bg-background-tertiary rounded-full h-2;
+  }
+  
+  .progress-fill {
+    @apply bg-gradient-to-r from-primary-600 to-secondary-600 h-2 rounded-full transition-all duration-300;
+  }
+  
+  .table-row {
+    @apply border-b border-border hover:bg-background-secondary transition-colors duration-200;
+  }
+  
+  .badge {
+    @apply px-2 py-1 rounded-full text-xs font-medium;
+  }
+  
+  .badge-success {
+    @apply badge bg-accent-600/20 text-accent-300;
+  }
+  
+  .badge-warning {
+    @apply badge bg-yellow-600/20 text-yellow-300;
+  }
+  
+  .badge-error {
+    @apply badge bg-destructive/20 text-destructive-foreground;
+  }
+  
+  .badge-info {
+    @apply badge bg-primary-600/20 text-primary-300;
+  }
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .backdrop-glass {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #404040;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #606060;
+}
+
+/* Loading animations */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.loading-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
